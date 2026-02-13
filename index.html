@@ -114,14 +114,17 @@ button {
 /* photos */
 .photo-row {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .photo {
-  width: 32%;   /* smaller than before */
+  width: 60%;
+  max-width: 320px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 
@@ -159,7 +162,7 @@ button {
 
 <!-- PAGE 2 -->
 <div id="page2" class="page retro">
-  <h1>❤️ Meri pyari Dodo darling ❤️</h1>
+  <h1>❤️ Meri pyari<br>Dodo darling ❤️</h1>
 
   <div id="poem"></div>
 
@@ -182,10 +185,10 @@ button {
 
   <div class="photo-row">
     <img src="src/us1.jpeg" class="photo">
-    <img src="src/us2.jpeg" class="photo">
+    <img src="src/us2.jpeg" class="photo" id="eggPhoto">
   </div>
 
-  <div id="egg">
+  <!-- <div id="egg"> -->
     .
   </div>
 </div>
@@ -298,8 +301,8 @@ function startHearts() {
 }
 
 /* ---------- EASTER EGG ---------- */
-document.getElementById("egg").onclick = () => {
-  alert("I humbly request a date night permission!🥰");
+document.getElementById("eggPhoto").onclick = () => {
+  alert("used up all my luck to find you, now we'll have to survive on your skills XD");
 };
 </script>
 
