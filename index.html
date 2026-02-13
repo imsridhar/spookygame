@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: monospace;
+  overflow-x: hidden;
+}
+
+/* shared background style */
+.page {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+  padding: 30px;
+  display: none;
+  color: white;
+}
+
+/* PAGE 1 gothic */
+#gothic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  background-color: black;
+}
+
+/* retro pages */
+.retro {
+  color: #fff;
+  text-shadow: 1px 1px 3px black;
+}
+
+
+/* readable retro text */
+.retro h1 {
+  color: #2b2b2b;
+  background: rgba(255, 220, 235, 0.75); /* pastel pink */
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+.retro p,
+.retro .line,
+#questionText {
+  color: #222;
+  background: rgba(255, 245, 190, 0.7);
+  display: block;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 8px;
+  margin: 6px auto;
+}
+
+
+h1 {
+  font-size: 26px;
+}
+
+/* poem animation */
+.line {
+  opacity: 0;
+  margin: 6px 0;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* question styling */
+#question {
+  margin-top: 20px;
+}
+
+#questionText {
+  font-size: 24px;
+  font-family: "Comic Sans MS", cursive;
+  margin-bottom: 20px;
+}
+
+/* buttons vertical center */
+.button-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  font-size: 18px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+}
+
+#yesBtn { background: #ff4d6d; color: white; }
+/* #noBtn { background: #888; color: white; position: relative; } */
+#noBtn {
+  background: #888;
+  color: white;
+  position: fixed;
+  z-index: 1000;
+}
+
+
+/* photos */
+.photo-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.photo {
+  width: 32%;   /* smaller than before */
+  border-radius: 10px;
+}
+
+
+/* falling hearts */
+.heart {
+  position: fixed;
+  top: -10px;
+  font-size: 24px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(100vh); opacity: 0; }
+}
+
+/* easter egg */
+#egg {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  opacity: 0.1;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="gothic" class="page">
+  ARE YOU READY? 
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page retro">
+  <h1>❤️ Meri pyari Dodo darling ❤️</h1>
+
+  <div id="poem"></div>
+
+  <div id="question" style="display:none;">
+    <div id="questionText">
+      Monu, my love, will you be my valentine?
+    </div>
+
+    <div class="button-column">
+      <button id="yesBtn">YES 🥰</button>
+      <button id="noBtn">NO 😜</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page retro">
+  <h1>No backsies, you have already said yes now! ❤️</h1>
+  <p>Forever yours, my Dodo Darling 💖</p>
+
+  <div class="photo-row">
+    <img src="src/us1.jpeg" class="photo">
+    <img src="src/us2.jpeg" class="photo">
+  </div>
+
+  <div id="egg">
+    .
+  </div>
+</div>
+
+<!-- music -->
+<audio id="music" loop>
+  <source src="src/with-you-cut.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ---------- BACKGROUND INPUTS ---------- */
+const bg1 = "src/spooky.jpeg";
+const bg2 = "src/p2.jpeg";
+const bg3 = "src/p3.jpeg";
+
+document.getElementById("gothic").style.backgroundImage = `url(${bg1})`;
+document.getElementById("page2").style.backgroundImage = `url(${bg2})`;
+document.getElementById("page3").style.backgroundImage = `url(${bg3})`;
+
+/* ---------- POEM ---------- */
+const lines = [
+"I didn't fall in love with you",
+"I walked into love with you",
+"with heart pounding faster",
+"second by second",
+"with wide eyes",
+"choosing to take every step",
+"along the way.",
+
+"I never believed the concept of",
+"\"soulmates\" or \"fate\" or \"destiny\".",
+"but then I met you",
+"and you, my darling,",
+"made me rethink everything.",
+
+"In a hundred lifetimes",
+"In a hundred crowded rooms of people",
+"in any version of reality",
+"I'd find you and I'd choose you.",
+"" // empty line after poem
+];
+
+/* ---------- NAVIGATION ---------- */
+const gothic = document.getElementById("gothic");
+const page2 = document.getElementById("page2");
+const page3 = document.getElementById("page3");
+
+gothic.style.display = "flex";
+
+gothic.onclick = () => {
+  gothic.style.display = "none";
+  page2.style.display = "block";
+  document.getElementById("music").play().catch(()=>{});
+  animatePoem();
+};
+
+/* ---------- POEM ANIMATION ---------- */
+function animatePoem() {
+  const container = document.getElementById("poem");
+  let i = 0;
+
+  function showLine() {
+    if (i < lines.length) {
+      const div = document.createElement("div");
+      div.className = "line";
+      div.innerHTML = lines[i] || "&nbsp;";
+      container.appendChild(div);
+      i++;
+      setTimeout(showLine, 850);
+    } else {
+      document.getElementById("question").style.display = "block";
+    }
+  }
+
+  showLine();
+}
+
+/* ---------- BUTTONS ---------- */
+document.getElementById("yesBtn").onclick = () => {
+  page2.style.display = "none";
+  page3.style.display = "block";
+  startHearts();
+};
+
+document.getElementById("noBtn").onmouseover = moveButton;
+document.getElementById("noBtn").ontouchstart = moveButton;
+
+function moveButton() {
+  const btn = document.getElementById("noBtn");
+
+  const maxX = window.innerWidth - btn.offsetWidth - 20;
+  const maxY = window.innerHeight - btn.offsetHeight - 20;
+
+  btn.style.left = Math.random() * maxX + "px";
+  btn.style.top = Math.random() * maxY + "px";
+}
+
+
+/* ---------- HEARTS ---------- */
+function startHearts() {
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(Math.random()*2+3)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+  },200);
+}
+
+/* ---------- EASTER EGG ---------- */
+document.getElementById("egg").onclick = () => {
+  alert("I humbly request a date night permission!🥰");
+};
+</script>
+
+</body>
+</html>
